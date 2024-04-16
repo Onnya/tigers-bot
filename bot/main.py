@@ -5,9 +5,10 @@ from telebot import types
 from telebot.async_telebot import AsyncTeleBot
 
 import database
+import photo_service
 
 
-TOKEN = "<your token>"
+TOKEN = "7029765070:AAHEAbjrQ6n_3daTGs4AIykv7TFS5dPZCjQ"
 
 bot = AsyncTeleBot(token=TOKEN)
 db = database.Database()
@@ -63,9 +64,9 @@ async def step3(message):
 
         db.add_photo(message.chat.id, f"photos/{file_id}.png")
 
-    ''' тут надо фотку обработать '''
+    tiger_photo = photo_service.get_photo(photo)
 
-    await bot.send_photo(message.chat.id, photo, caption="<description>")
+    await bot.send_photo(message.chat.id, tiger_photo, caption="<description>")
 
     buttons = types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Да", callback_data="yes"))
     buttons.add(types.InlineKeyboardButton("А что это?", callback_data="question"))
