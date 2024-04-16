@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, send_file
 from io import BytesIO
+from PIL import Image
 from app.utils.image_processing import extract_image_vector, find_similar_photo
 
 upload_photo_blueprint = Blueprint('upload_photo', __name__)
@@ -17,15 +18,15 @@ def upload_photo():
     if photo_filename == '':
         return jsonify({'error': 'No selected file'}), 400
 
-    photo = photo_obj.read()
+    photo_bytes = photo_obj.read()
+    photo = Image.open(BytesIO(photo_bytes))
     photo_mimetype = photo_obj.content_type
 
-    #image_vector = extract_image_vector(photo)
+    image_vector = extract_image_vector(photo)
+    similar_photo_url = find_similar_photo(image_vector)
 
-    #similar_photo = find_similar_photo(image_vector)
-    similar_photo = photo
     return send_file(
-        BytesIO(similar_photo),
+        similar_photo_url,
         mimetype=photo_mimetype,
         as_attachment=True,
         download_name=f"tiger-{photo_filename}"

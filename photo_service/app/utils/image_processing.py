@@ -1,5 +1,6 @@
 from app import client, processor, model
 from transformers.utils import reshape
+from os.path import join, dirname, abspath
 
 
 def extract_image_vector(photo):
@@ -10,8 +11,12 @@ def extract_image_vector(photo):
 
 
 def find_similar_photo(image_vector):
+    collection_name = "tigers_collection"
     search_results = client.search(
-        collection_name="tigers_collection", query_vector=image_vector, limit=3
+        collection_name=collection_name, query_vector=image_vector, limit=3
     )
 
-    return search_results # дописать отправку самого вероятного
+    most_similar_url = search_results[0].payload["url"]
+    current_directory = dirname(abspath(__file__))
+    photo_path = join(current_directory, '..', '..', 'photos', most_similar_url)
+    return photo_path
