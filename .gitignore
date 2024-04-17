@@ -165,3 +165,7 @@ photos_info.json
 # Игнорирование всех файлов в папке photo_service/photos
 photo_service/photos/*
 photo_service
+
+*.db
+*.sqlite
+*.sql

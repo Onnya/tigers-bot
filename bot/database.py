@@ -79,7 +79,7 @@ class Database:
 
 
 if __name__ == "__main__":
-    # create_database("database.db")
+    create_database("database.db")
     db = Database()
     db.get_user(2)
     print(db.get_user(2))
