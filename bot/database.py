@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def create_database(name):
     db = sqlite3.connect(name)
     db.row_factory = sqlite3.Row
@@ -40,7 +41,7 @@ class Database:
             step = self.__cur.fetchall()
             if not len(step):
                 self.__add_user(telegram_id)
-                return "step1"
+                return "start"
             return step[0]["step"]
         except Exception as exception:
             raise DatabaseError("Can't get user from database.", exception)
@@ -79,7 +80,7 @@ class Database:
 
 
 if __name__ == "__main__":
-    create_database("database.db")
+    # create_database("database.db")
     db = Database()
     db.get_user(2)
     print(db.get_user(2))
