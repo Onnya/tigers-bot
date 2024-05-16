@@ -1,23 +1,21 @@
-import json
 from PIL import Image
 from qdrant_client import models
 import uuid
 from app.utils.image_processing import extract_image_vector
-from app import client, vectors_config
-from os.path import join, dirname, abspath
+from app.utils.parse_photos_json import parse_photos_info
+from app import client, vectors_config, APP_DIR
+from os.path import join
 
 
 def populate_database(clear_collection=False):
     collection_name = "tigers_collection"
-    current_directory = dirname(abspath(__file__))
-    json_path = join(current_directory, '..', '..', 'photos_info.json')
 
     if clear_collection:
         clear_collection_data(collection_name)
 
     create_collection_if_not_exist(collection_name)
 
-    new_points = parse_config_json(json_path)
+    new_points = parse_photos_info()
     push_points(collection_name, new_points)
 
 
@@ -34,23 +32,15 @@ def create_collection_if_not_exist(collection_name):
         )
 
 
-def parse_config_json(path):
-    with open(path, encoding="UTF-8") as f:
-        data = json.load(f)
-        photos_info = data['photos']
-    return photos_info
-
-
 def push_points(collection_name, points):
-    current_directory = dirname(abspath(__file__))
     new_points = []
     for point in points:
         url = point["url"]
         if not vector_exists(collection_name, url):
-            photo_path = join(current_directory, '..', '..', 'photos', url)
+            photo_path = join(APP_DIR, '..', 'photos', url)
             photo = Image.open(photo_path)
             vector = extract_image_vector(photo)
-            point = get_point(collection_name, vector, url)
+            point = get_point(vector, url)
             new_points.append(point)
     if new_points:
         client.upsert(collection_name, new_points)
@@ -71,7 +61,7 @@ def vector_exists(collection_name, url):
     return len(vectors[0]) > 0
 
 
-def get_point(collection_name, vector, url):
+def get_point(vector, url):
     vector_id = str(uuid.uuid4())
     return models.PointStruct(id=vector_id, vector=vector, payload={"url": url})
 

@@ -23,11 +23,15 @@ def upload_photo():
     photo_mimetype = photo_obj.content_type
 
     image_vector = extract_image_vector(photo)
-    similar_photo_url = find_similar_photo(image_vector)
+    similar_photo_url, similar_photo_description = find_similar_photo(image_vector)
 
-    return send_file(
+    file_response = send_file(
         similar_photo_url,
         mimetype=photo_mimetype,
         as_attachment=True,
         download_name=f"tiger-{photo_filename}"
-    ), 200
+    )
+
+    file_response.headers['X-Photo-Description'] = similar_photo_description
+
+    return file_response, 200
