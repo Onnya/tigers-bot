@@ -1,6 +1,6 @@
 from app import client, processor, model, photos_descriptions, APP_DIR
 from transformers.utils import reshape
-from os.path import join
+from pathlib import Path
 
 
 def extract_image_vector(photo):
@@ -17,7 +17,7 @@ def find_similar_photo(image_vector):
     )
 
     most_similar_url = search_results[0].payload["url"]
-    photo_path = join(APP_DIR, '..', 'photos', most_similar_url)
+    photo_path = Path(APP_DIR).parent / 'photos' / most_similar_url
     photo_description = photos_descriptions[most_similar_url]
 
     return photo_path, photo_description

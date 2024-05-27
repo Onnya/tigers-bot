@@ -1,10 +1,12 @@
+from pathlib import Path
+import uuid
+
 from PIL import Image
 from qdrant_client import models
-import uuid
+
 from app.utils.image_processing import extract_image_vector
 from app.utils.parse_photos_json import parse_photos_info
 from app import client, vectors_config, APP_DIR
-from os.path import join
 
 
 def populate_database(clear_collection=False):
@@ -37,7 +39,7 @@ def push_points(collection_name, points):
     for point in points:
         url = point["url"]
         if not vector_exists(collection_name, url):
-            photo_path = join(APP_DIR, '..', 'photos', url)
+            photo_path = Path(APP_DIR).parent / 'photos' / url
             photo = Image.open(photo_path)
             vector = extract_image_vector(photo)
             point = get_point(vector, url)

@@ -1,10 +1,11 @@
 import json
+from pathlib import Path
+
 from app import APP_DIR
-from os.path import join
 
 
 def parse_photos_info():
-    path = join(APP_DIR, '..', 'photos_info.json')
+    path = Path(APP_DIR).parent / 'photos_info.json'
     with open(path, encoding="UTF-8") as f:
         data = json.load(f)
         photos_info = data['photos']
