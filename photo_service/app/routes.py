@@ -1,6 +1,9 @@
-from flask import Blueprint, request, jsonify, send_file
+from urllib.parse import quote
 from io import BytesIO
+
+from flask import Blueprint, request, jsonify, send_file
 from PIL import Image
+
 from app.utils.image_processing import extract_image_vector, find_similar_photo
 
 upload_photo_blueprint = Blueprint('upload_photo', __name__)
@@ -24,6 +27,7 @@ def upload_photo():
 
     image_vector = extract_image_vector(photo)
     similar_photo_url, similar_photo_description = find_similar_photo(image_vector)
+    encoded_text = quote(similar_photo_description)
 
     file_response = send_file(
         similar_photo_url,
@@ -32,6 +36,6 @@ def upload_photo():
         download_name=f"tiger-{photo_filename}"
     )
 
-    file_response.headers['X-Photo-Description'] = similar_photo_description
+    file_response.headers['X-Photo-Description'] = encoded_text
 
     return file_response, 200

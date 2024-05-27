@@ -1,12 +1,23 @@
+from os import getenv
+from os.path import exists
+
 import asyncio
 import telebot
 from telebot import types
 from telebot.async_telebot import AsyncTeleBot
+from dotenv import load_dotenv
+
 import database
 import photo_service
 
-TOKEN = "TOKEN"
+
+load_dotenv()
+
+TOKEN = getenv("TOKEN")
 bot = AsyncTeleBot(token=TOKEN)
+
+if not exists("database.sqlite"):
+    database.create_database("database.sqlite")
 db = database.Database()
 
 
@@ -54,10 +65,10 @@ async def receive_photo(message):
 
         db.add_photo(message.chat.id, f"photos/{file_id}.png")
 
-    # tiger_photo = photo_service.get_photo(photo)
-    tiger_photo = photo
+    tiger_photo, tiger_description = photo_service.get_photo(photo)
+    # tiger_photo = photo
 
-    await bot.send_photo(message.chat.id, tiger_photo, caption="<description>")
+    await bot.send_photo(message.chat.id, tiger_photo, caption=tiger_description)
 
     buttons = types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Да", callback_data="confirm_analysis"))
     buttons.add(types.InlineKeyboardButton("А что это?", callback_data="ask_question"))
@@ -78,13 +89,13 @@ async def analyze_photo(callback):
                 types.InlineKeyboardButton("Давай! 💪🎨", callback_data="mix_photo"))
             markup.add(types.InlineKeyboardButton("Я передумал", callback_data="skip_mix"))
             await bot.send_message(callback.message.chat.id,
-                                   "Кандинский - это нейросеть, созданная разработчиками из Сбера. "
+                                  "Кандинский - это нейросеть, созданная разработчиками из Сбера. "
                                    "Он может соединить твое фото с фото твоего тигрового двойника 🐯🔗 Интересно же, правда? "
                                    "🤩 Готов попробовать? 😄", reply_markup=markup)
             return choose_mix_option.__name__
         case "decline_analysis":
             return await tigers_shoced(callback.message)
-            return await skip_analysis(callback.message)
+            # return await skip_analysis(callback.message)
     await bot.send_message(callback.message.chat.id,
                            "Ой, ты нажал не на ту кнопку! Вернись к последнему сообщению и выбери свой вариант ответа.")
     return analyze_photo.__name__

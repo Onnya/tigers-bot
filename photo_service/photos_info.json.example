@@ -1,0 +1,24 @@
+{
+  "photos": [
+    {
+      "url": "img-001.jpg",
+      "description": "Описание фотографии 1"
+    },
+    {
+      "url": "img-002.jpeg",
+      "description": "Описание фотографии 2"
+    },
+    {
+      "url": "img-003.jpeg",
+      "description": "Описание фотографии 3"
+    },
+    {
+      "url": "img-004.jpeg",
+      "description": "Описание фотографии 4"
+    },
+    {
+      "url": "img-005.jpeg",
+      "description": "Описание фотографии 5"
+    }
+  ]
+}
