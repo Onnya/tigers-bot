@@ -167,4 +167,3 @@ photo_service/photos/*
 
 *.db
 *.sqlite
-*.sql
