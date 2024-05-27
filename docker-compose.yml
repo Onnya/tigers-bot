@@ -8,8 +8,8 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - /d/Programs/Python/tigers-bot/photos:/app/photos
-      - /d/Programs/Python/tigers-bot/photos_info.json:/app/photos_info.json
+      - /var/www/tigers-bot/photos:/app/photos
+      - /var/www/tigers-bot/photos_info.json:/app/photos_info.json
     environment:
       - RELOAD_VECTORS=${RELOAD_VECTORS:-false}
     depends_on:
@@ -28,7 +28,7 @@ services:
       - "6333:6333"
       - "6334:6334"
     volumes:
-      - /d/Programs/Docker/qdrant:/qdrant/storage
+      - /var/www/tigers-bot/qdrant:/qdrant/storage
 
 volumes:
   qdrant_data:
