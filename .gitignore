@@ -167,3 +167,5 @@ photo_service/photos/*
 
 *.db
 *.sqlite
+
+/bot/facts.json

@@ -1,5 +1,7 @@
 from os import getenv
 from os.path import exists
+from json import load
+from random import choice
 
 import asyncio
 import telebot
@@ -13,12 +15,21 @@ import photo_service
 
 load_dotenv()
 
+facts_file_name = "facts.json"
+
 TOKEN = getenv("TOKEN")
 bot = AsyncTeleBot(token=TOKEN)
 
 if not exists("database.sqlite"):
     database.create_database("database.sqlite")
 db = database.Database()
+
+
+def get_random_fact(filename):
+    with open(filename, 'r') as file:
+        data = load(file)
+        facts = data['facts']
+        return choice(facts)
 
 
 def validate(msg, expected):
@@ -69,6 +80,9 @@ async def receive_photo(message):
     # tiger_photo = photo
 
     await bot.send_photo(message.chat.id, tiger_photo, caption=tiger_description)
+
+    random_fact = get_random_fact(facts_file_name)
+    await bot.send_message(message.chat.id, f"💡*Интересный факт:*\n{random_fact}", parse_mode="Markdown")
 
     buttons = types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Да", callback_data="confirm_analysis"))
     buttons.add(types.InlineKeyboardButton("А что это?", callback_data="ask_question"))
