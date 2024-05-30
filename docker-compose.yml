@@ -9,12 +9,14 @@ services:
       - "5000:5000"
     volumes:
       - /var/www/tigers-bot/photos:/app/photos
-      - /var/www/tigers-bot/photos_info.json:/app/photos_info.json
+        #- /var/www/tigers-bot/photos_info.json:/app/photos_info.json
     environment:
       - RELOAD_VECTORS=${RELOAD_VECTORS:-false}
       - CLEAR_DB=${CLEAR_DB:-false}
     depends_on:
       - qdrant
+    networks:
+      - bot_network
 
   telegram_bot:
     build:
@@ -22,6 +24,8 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - flask_app
+    networks:
+      - bot_network
 
   qdrant:
     image: qdrant/qdrant
@@ -30,6 +34,12 @@ services:
       - "6334:6334"
     volumes:
       - /var/www/tigers-bot/qdrant:/qdrant/storage
+    networks:
+      - bot_network
+
+networks:
+  bot_network:
+    driver: bridge
 
 volumes:
   qdrant_data:
