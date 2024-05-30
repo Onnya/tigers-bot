@@ -12,6 +12,7 @@ services:
       - /var/www/tigers-bot/photos_info.json:/app/photos_info.json
     environment:
       - RELOAD_VECTORS=${RELOAD_VECTORS:-false}
+      - CLEAR_DB=${CLEAR_DB:-false}
     depends_on:
       - qdrant
 

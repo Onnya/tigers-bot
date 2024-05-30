@@ -28,9 +28,10 @@ from app.utils.populate_database import populate_database
 
 
 reload_vectors_flag = getenv('RELOAD_VECTORS', 'false').lower() == 'true'
+clear_db_flag = getenv('CLEAR_DB', 'false').lower() == 'true'
 
 if reload_vectors_flag:
-    populate_database()
+    populate_database(clear_collection=clear_db_flag)
 
 
 from app.routes import upload_photo_blueprint
