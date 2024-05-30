@@ -22,7 +22,7 @@ def populate_database(clear_collection=False):
 
 
 def clear_collection_data(collection_name):
-    client.vectors.delete(collection_name)
+    client.delete_collection(collection_name=collection_name)
 
 
 def create_collection_if_not_exist(collection_name):
