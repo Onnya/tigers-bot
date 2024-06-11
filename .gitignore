@@ -169,3 +169,7 @@ photo_service/photos/*
 *.sqlite
 
 /bot/facts.json
+
+anon.session
+
+feedback.txt
